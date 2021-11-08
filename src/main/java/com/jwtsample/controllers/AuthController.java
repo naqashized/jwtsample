@@ -1,6 +1,6 @@
 package com.jwtsample.controllers;
 
-import com.jwtsample.ApiResponse;
+import com.jwtsample.dtos.ApiResponse;
 import com.jwtsample.config.CustomAuthenticationToken;
 import com.jwtsample.config.JwtAuthenticationResponse;
 import com.jwtsample.config.JwtTokenProvider;

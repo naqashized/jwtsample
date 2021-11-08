@@ -20,21 +20,21 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Profile("!test")
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
-    private com.jwtsample.config.CustomAuthenticationProvider authProvider;
+    private CustomAuthenticationProvider authProvider;
     
-    @Autowired
-    com.jwtsample.config.CustomUserDetailsAuthenticationProvider userDetailsAuthenticationProvider;
+//    @Autowired
+//    private CustomUserDetailsAuthenticationProvider userDetailsAuthenticationProvider;
 
     @Autowired
-    private com.jwtsample.config.JwtAuthenticationEntryPoint unauthorizedHandler;
+    private JwtAuthenticationEntryPoint unauthorizedHandler;
     
     public SecurityConfig() {
         super();
     }
 
     @Bean
-    public com.jwtsample.config.JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-    	com.jwtsample.config.CustomUsernamePasswordAuthenticationFilter filter = new com.jwtsample.config.CustomUsernamePasswordAuthenticationFilter();
+    public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
+    	CustomUsernamePasswordAuthenticationFilter filter = new CustomUsernamePasswordAuthenticationFilter();
         filter.setAuthenticationManager(authenticationManagerBean());
         return new com.jwtsample.config.JwtAuthenticationFilter();
     }
@@ -85,12 +85,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .authenticated();
 
         // Add our custom JWT security filter
-        http.addFilterBefore(jwtAuthenticationFilter(), com.jwtsample.config.CustomUsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtAuthenticationFilter(), CustomUsernamePasswordAuthenticationFilter.class);
 
     }
     
-    public com.jwtsample.config.CustomUsernamePasswordAuthenticationFilter authenticationFilter() throws Exception {
-    	com.jwtsample.config.CustomUsernamePasswordAuthenticationFilter filter = new com.jwtsample.config.CustomUsernamePasswordAuthenticationFilter();
+    public CustomUsernamePasswordAuthenticationFilter authenticationFilter() throws Exception {
+    	com.jwtsample.config.CustomUsernamePasswordAuthenticationFilter filter = new CustomUsernamePasswordAuthenticationFilter();
         filter.setAuthenticationManager(authenticationManagerBean());
         //filter.setAuthenticationFailureHandler(failureHandler());
         return filter;
