@@ -34,17 +34,14 @@ public class CustomAuthenticationProvider implements AuthenticationProvider{
 			final Authentication auth2 = new UsernamePasswordAuthenticationToken(user, passwordEncoder.encode(password), grantedAuths);
 			return auth2;
 
-		} catch (Exception e) {
+		} catch (BadCredentialsException e) {
 			throw new BadCredentialsException("Authentication failed");
 		}
-
 	}
 
 	@Override
 	public boolean supports(Class<?> authentication) {
 		return authentication.equals(UsernamePasswordAuthenticationToken.class);
 	}
-	
-
 
 }

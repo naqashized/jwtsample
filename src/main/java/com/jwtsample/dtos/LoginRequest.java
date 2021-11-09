@@ -10,11 +10,8 @@ import javax.validation.constraints.NotBlank;
 public class LoginRequest {
     @NotBlank
     private String accessId;
-
     @NotBlank
     private String password;
-    
     @NotBlank
     private String username;
-
 }
