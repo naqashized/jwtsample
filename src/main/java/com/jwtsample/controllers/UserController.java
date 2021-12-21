@@ -1,5 +1,6 @@
 package com.jwtsample.controllers;
 
+import com.jwtsample.dtos.BasicUserInfoDTO;
 import com.jwtsample.models.User;
 import com.jwtsample.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,11 @@ public class UserController {
     @GetMapping("/all")
     List<User> findAllUsers(){
         return userRepository.findAll();
+    }
+
+    @GetMapping("/basic/all")
+    List<BasicUserInfoDTO> findAllUsersWithBasicInfo(){
+        return userRepository.findAllUsersWithBasicInfo();
     }
 
 }

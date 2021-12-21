@@ -1,6 +1,8 @@
 package com.jwtsample.jwtsample;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jwtsample.models.User;
+import com.jwtsample.repositories.UserRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,8 +17,12 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import javax.transaction.Transactional;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -29,6 +35,8 @@ public class UserControllerTests {
 	@Autowired
 	private ObjectMapper objectMapper;
 	private MockMvc mockMvc;
+	@Autowired
+	private UserRepository userRepository;
 	
 	@Before
 	public void init(){
@@ -37,36 +45,25 @@ public class UserControllerTests {
         		.webAppContextSetup(wac)
                 .build();
 	}
-	
-	@Test
-	public void getMerchantTransactionsById() throws Exception{
-		String request = "  {\r\n" + 
-				"      \"schemaVersion\": \"1.0\",\r\n" + 
-				"      \"requestId\": \"WF123458\",\r\n" + 
-				"      \"sessionId\": \"SF7632603147897963917\",\r\n" + 
-				"      \"timestamp\": \"3131231121\",\r\n" + 
-				"      \r\n" + 
-				"      \"channelName\": \"Web\",	\r\n" + 
-				"        \"commandName\": \"/Get_SettlementAccTypes\",\r\n" + 
-				"            \"payLoad\": {\r\n" + 
-				"                                \r\n" + 
-				"             }\r\n" + 
-				"}";
-        Object randomObj = new Object() {
-            public final String id = "1234";
-        };
-        MediaType MEDIA_TYPE_JSON_UTF8 = new MediaType("application", "json", java.nio.charset.Charset.forName("UTF-8"));
-        ObjectMapper objectMapper = new ObjectMapper();
-        String json = objectMapper.writeValueAsString(randomObj);
-		mockMvc.perform(post("/pg/request")
-			    .contentType(MEDIA_TYPE_JSON_UTF8)
-			    .content(request))
-			    //.characterEncoding("utf-8"))
-				.andExpect(status().isOk())
-				//.andExpect(content().contentType(MEDIA_TYPE_JSON_UTF8))
-				//.andExpect(jsonPath("$", hasSize(1)))
-//				.andExpect(jsonPath("$[0].id").value(1L))
-//				.andExpect(jsonPath("$[0].firstName").value("David"))
-				.andDo(print());
+
+	private void setupUser(){
+		User user = new User();
+		user.setAccessId("accessId");
+		user.setUsername("testUser");
+		user.setPassword("123456");
+		user.setEnabled(true);
+		userRepository.save(user);
 	}
+
+	@Test
+	public void getAllUserWithBasicInfo() throws Exception {
+		setupUser();
+		mockMvc.perform(get("/user/basic/all/"))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType("application/json"))
+				//  .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Applicant Test"))
+				.andDo(print());
+
+	}
+
 }
